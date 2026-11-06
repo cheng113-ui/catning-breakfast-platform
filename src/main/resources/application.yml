@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: catning-breakfast-platform
+  datasource:
+    url: jdbc:h2:mem:catning;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jackson:
+    default-property-inclusion: non_null
+  mvc:
+    problemdetails:
+      enabled: false
+
+server:
+  port: 8080
+  error:
+    include-message: never
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:catning-breakfast-platform-demo-secret-2026}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:7200}
+  demo-data:
+    enabled: ${DEMO_DATA_ENABLED:true}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    org.hibernate.SQL: info

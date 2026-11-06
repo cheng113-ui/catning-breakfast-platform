@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: catning-mysql
+    environment:
+      MYSQL_DATABASE: catning
+      MYSQL_USER: catning
+      MYSQL_PASSWORD: catning123
+      MYSQL_ROOT_PASSWORD: root123
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - catning_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    container_name: catning-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      DB_URL: jdbc:mysql://mysql:3306/catning?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      DB_USERNAME: catning
+      DB_PASSWORD: catning123
+      JWT_SECRET: catning-docker-demo-secret-change-before-production
+    ports:
+      - "8080:8080"
+
+volumes:
+  catning_mysql_data:
